@@ -33,25 +33,38 @@
         <div class="box box-primary">
           <div class="box-body box-profile">
             <img class="profile-user-img img-responsive img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
-
-            <h3 class="profile-username text-center">{{ Auth::user()->name }}</h3>
-
+            <h3 class="profile-username text-center">{{ $user->name }}</h3>
             <!-- <p class="text-muted text-center"></p> -->
 
             <ul class="list-group list-group-unbordered">
               <li class="list-group-item">
-                <b>Followers</b> <a class="pull-right">1,322</a>
+                <b>Followers</b> <a class="pull-right">{{ count($user->followers) }}</a>
               </li>
               <li class="list-group-item">
-                <b>Following</b> <a class="pull-right">543</a>
+                <b>Following</b> <a class="pull-right">{{ count($user->following) }}</a>
               </li>
             </ul>
-            <!-- <form action="route('user.follow', $bank->id)" method="POST" accept-charset="utf-8">
-             {{ csrf_field() }}
-             {{ method_field('DELETE') }}
-               <button type="button" style="" class="btn btn-link" "><i class="fa fa-trash fa-lg text-danger"></i></a>
-            </form> -->
-            <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+            @if ($user->id != Auth::user()->id)
+              @php
+                $followingid = array();
+                foreach (Auth::user()->following as $key => $following){
+                  array_push($followingid, $following->id);
+                }
+              @endphp
+              @if (!in_array($user->id, $followingid))
+              <form action="{{ route('users.follow', $user->id) }}" method="POST" accept-charset="utf-8">
+               {{ csrf_field() }}
+                <button type="submit" class="btn btn-primary btn-block"><b>Follow</b></button>
+              </form>
+              @else
+              <form action="{{ route('users.unfollow', $user->id) }}" method="POST" accept-charset="utf-8">
+               {{ csrf_field() }}
+               <button type="submit" class="btn btn-danger btn-block"><b>Unfollow</b></button>
+              </form>
+              @endif
+            @else
+            @endif
+            <!-- <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a> -->
           </div>
           <!-- /.box-body -->
         </div>
@@ -108,10 +121,10 @@
           <div class="box-body">
             <video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="268"
             data-setup='{}'>
-              <source src="rtmp://10.151.36.34/{{ Auth::user()->username }}/test" type='rtmp/mp4'>
+              <source src="rtmp://10.151.36.34/{{ $user->username }}/test" type='rtmp/mp4'>
             </video>
 
-            <div class="chat">
+            <div id="chat-{{ $user->id }}" class="chatbox" user="{{ Auth::user()->username }}">
               <ul id="messages"></ul>
               <span id="notifyUser"></span>
               <form id="form" action="" onsubmit=" return submitfunction();" >

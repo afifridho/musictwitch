@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Followings;
+use App\Followers;
+use Auth;
 use Uuid;
 
 class UserController extends Controller
@@ -16,7 +19,8 @@ class UserController extends Controller
      */
     public function index($id)
     {
-        return view('users.index');
+        $user = User::where('id', $id)->get()->first();
+        return view('users.index')->with('user', $user);
     }
 
     /**
@@ -95,13 +99,46 @@ class UserController extends Controller
         dd($search);
     }
 
-    public function follow($id)
+    public function follow(Request $request, $id)
     {
-        //
+        // dd($id);
+        $following = new Followings;
+        $following->followings_id = $id;
+        $following->users_id = Auth::user()->id;
+
+        $followers = new Followers;
+        $followers->followers_id = Auth::user()->id;;
+        $followers->users_id = $id;
+
+        try {
+          $following->save();
+          $followers->save();
+        } catch (Exception $e) {
+          // $user = User::where('id', $id)->get()->first();
+          // return view('users.index')->with('user', $user);
+          return redirect()->route('users.index', $id);
+        }
+        // $user = User::where('id', $id)->get()->first();
+        // return view('users.index')->with('user', $user);
+        return redirect()->route('users.index', $id);
+
     }
 
-    public function unfollow($id)
+    public function unfollow(Request $request, $id)
     {
-        //
+        $unfollow1 = Followings::where('followings_id', $id);
+        $unfollow2 = Followers::where('users_id', $id);
+
+        try {
+          $unfollow1->delete();
+          $unfollow2->delete();
+        } catch (Exception $e) {
+          // $user = User::where('id', $id)->get()->first();
+          // return view('users.index')->with('user', $user);
+          return redirect()->route('users.index', $id);
+        }
+        // $user = User::where('id', $id)->get()->first();
+        // return view('users.index')->with('user', $user);
+        return redirect()->route('users.index', $id);
     }
 }

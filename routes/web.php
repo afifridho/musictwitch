@@ -21,6 +21,8 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/live', function () {
     return view('live');
 });
-Route::get('users/{id}', ['as' => 'users.index', 'uses' => 'UserController@index']);
+Route::get('/users/{id}', ['as' => 'users.index', 'uses' => 'UserController@index']);
 Route::resource('users', 'UserController', ['except' => ['index']]);
 Route::get('/search','UserController@searchuser')->name('users.searchuser');
+Route::post('/users/{id}/follow','UserController@follow')->name('users.follow');
+Route::post('/users/{id}/unfollow','UserController@unfollow')->name('users.unfollow');

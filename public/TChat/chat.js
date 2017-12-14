@@ -32,7 +32,7 @@ socket.on('notifyUser', function(user){
 });
 
 $(document).ready(function(){
-  var name = makeid();
+  var name = $('.chatbox').attr('user');
   $('#user').val(name);
   socket.emit('chatMessage', 'System', '<b>' + name + '</b> has joined the discussion');
 });
