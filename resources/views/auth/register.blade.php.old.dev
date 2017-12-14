@@ -30,19 +30,19 @@
 <body class="hold-transition register-page">
 <div class="register-box">
   <div class="register-logo">
-    <a href="../../index2.html"><b>Room</b>Cert</a>
+    <a href="../../index2.html"><b>Admin</b>LTE</a>
   </div>
 
   <div class="register-box-body">
     <p class="login-box-msg">Register a new membership</p>
 
-    <form class="form-horizontal" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+    <form class="form-horizontal" method="POST" action="{{ route('register') }}">
         {{ csrf_field() }}
 
         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-            <label for="name" class="col-md-3 control-label">Name</label>
+            <label for="name" class="col-md-4 control-label">Name</label>
 
-            <div class="col-md-9">
+            <div class="col-md-6">
                 <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
 
                 @if ($errors->has('name'))
@@ -54,9 +54,9 @@
         </div>
 
         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-            <label for="email" class="col-md-3 control-label">E-Mail Address</label>
+            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
 
-            <div class="col-md-9">
+            <div class="col-md-6">
                 <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
 
                 @if ($errors->has('email'))
@@ -68,9 +68,9 @@
         </div>
 
         <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-            <label for="email" class="col-md-3 control-label">Username</label>
+            <label for="email" class="col-md-4 control-label">Username</label>
 
-            <div class="col-md-9">
+            <div class="col-md-6">
                 <input id="username" type="text" class="form-control" name="username" value="{{ old('username') }}" required>
 
                 @if ($errors->has('username'))
@@ -82,9 +82,9 @@
         </div>
 
         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-            <label for="password" class="col-md-3 control-label">Password</label>
+            <label for="password" class="col-md-4 control-label">Password</label>
 
-            <div class="col-md-9">
+            <div class="col-md-6">
                 <input id="password" type="password" class="form-control" name="password" required>
 
                 @if ($errors->has('password'))
@@ -96,20 +96,11 @@
         </div>
 
         <div class="form-group">
-            <label for="password-confirm" class="col-md-3 control-label">Confirm Password</label>
+            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
 
-            <div class="col-md-9">
+            <div class="col-md-6">
                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
             </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-md-3 control-label">Profile Picture</label>
-
-          <div class="col-md-9">
-          <input type="file" name="file" required>
-            <p class="help-block">Put the Profile Picture file here.</p>
-          </div>
         </div>
 
         <div class="form-group">
@@ -121,7 +112,15 @@
         </div>
     </form>
 
-    <a href="{{ route('login') }}" class="text-center">I already have a membership</a>
+    <div class="social-auth-links text-center">
+      <p>- OR -</p>
+      <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign up using
+        Facebook</a>
+      <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign up using
+        Google+</a>
+    </div>
+
+    <a href="login.html" class="text-center">I already have a membership</a>
   </div>
   <!-- /.form-box -->
 </div>

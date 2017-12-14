@@ -9,6 +9,8 @@ use App\Followings;
 use App\Followers;
 use Auth;
 use Uuid;
+use Redirect;
+use GuzzleHttp\Client;
 
 class UserController extends Controller
 {
@@ -20,7 +22,10 @@ class UserController extends Controller
     public function index($id)
     {
         $user = User::where('id', $id)->get()->first();
-        return view('users.index')->with('user', $user);
+        $client = new Client();
+        $response = $client->request('GET','http://10.151.36.35/nclients?app=afifridho&name=test');
+        $viewers = $response->getBody();
+        return view('users.index', compact('user', 'viewers'));
     }
 
     /**
@@ -63,7 +68,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+      $user = User::where('id', $id)->get()->first();
+      return view('users.edit', compact('user'));
     }
 
     /**
@@ -75,7 +81,33 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $user = User::find($id);
+      // dd($user);
+      if(!$user)
+          return abort(404);
+      $user->name = $request->name;
+      $user->email = $request->email;
+      $user->password = $request->password;
+      if ($request->hasFile('file')) {
+        $data = $request->file('file');
+        $destinationPath = public_path('profpict');
+        $fileName = $user->id.'-'.$data->getClientOriginalName();
+        $data->move($destinationPath, $fileName);
+        $path = $destinationPath.'/'.$fileName;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $imgData = file_get_contents($path);
+        $base64images = 'data:image/' . $type . ';base64,' . base64_encode($imgData);
+        $user->profile_pictures = $base64images;
+      }
+
+      if($user->save())
+      {
+          return Redirect::to($request->url());
+      }
+      else
+      {
+          return Redirect::to($request->url());
+      }
     }
 
     /**
@@ -126,9 +158,9 @@ class UserController extends Controller
 
     public function unfollow(Request $request, $id)
     {
-        $unfollow1 = Followings::where('followings_id', $id);
-        $unfollow2 = Followers::where('users_id', $id);
-
+        $unfollow1 = Followings::where('followings_id', $id)->where('users_id', Auth::user()->id);
+        $unfollow2 = Followers::where('users_id', $id)->where('followers_id', Auth::user()->id);
+        // dd($unfollow2);
         try {
           $unfollow1->delete();
           $unfollow2->delete();

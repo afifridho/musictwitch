@@ -30,7 +30,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="#"><b>Music</b>Twitch</a>
+    <a href="#"><b>Room</b>Cert</a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
@@ -90,7 +90,7 @@
     </div>
     <!-- /.social-auth-links -->
 
-    <a href="{{ route('password.request') }}">I forgot my password</a><br>
+    <!-- <a href="{{ route('password.request') }}">I forgot my password</a><br> -->
     <a href="{{ route('register') }}" class="text-center">Register a new membership</a>
 
   </div>

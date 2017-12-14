@@ -29,7 +29,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -65,12 +65,26 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+      // dd($data['filke']);
+        $id = Uuid::generate();
+        if (!is_null($data['file'])) {
+          $datas = $data['file'];
+          $destinationPath = public_path('incomefile');
+          $fileName = $id.'-'.$datas->getClientOriginalName();
+          $datas->move($destinationPath, $fileName);
+          $path = $destinationPath.'/'.$fileName;
+          $type = pathinfo($path, PATHINFO_EXTENSION);
+          $imgData = file_get_contents($path);
+          $base64images = 'data:image/' . $type . ';base64,' . base64_encode($imgData);
+          $file = $base64images;
+        }
         return User::create([
             'id' => Uuid::generate(),
             'name' => $data['name'],
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'profile_pictures' => $file,
         ]);
     }
 }

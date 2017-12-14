@@ -8,6 +8,15 @@
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script src="{{ URL::asset('TChat/chat.js') }}"></script>
+<style media="screen">
+  .record-info{
+    border: 2px solid red;
+    padding: 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: black;
+  }
+</style>
 @endsection
 @section('content')
 <div class="content-wrapper">
@@ -32,7 +41,8 @@
         <!-- Profile Image -->
         <div class="box box-primary">
           <div class="box-body box-profile">
-            <img class="profile-user-img img-responsive img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
+            <a class="btn btn-link pull-right" href="{{ route('users.edit', Auth::user()->id) }}"><i class="fa fa-pencil fa-lg"></i></a>
+            <img class="profile-user-img img-responsive img-circle" width="20px" height="20px" src="{{ $user->profile_pictures }}" />
             <h3 class="profile-username text-center">{{ $user->name }}</h3>
             <!-- <p class="text-muted text-center"></p> -->
 
@@ -71,12 +81,12 @@
         <!-- /.box -->
 
         <!-- About Me Box -->
-        <div class="box box-primary">
+        <!-- <div class="box box-primary">
           <div class="box-header with-border">
             <h3 class="box-title">About Me</h3>
-          </div>
+          </div> -->
           <!-- /.box-header -->
-          <div class="box-body">
+          <!-- <div class="box-body">
             <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
 
             <p class="text-muted">
@@ -106,9 +116,9 @@
             <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
 
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
-          </div>
+          </div> -->
           <!-- /.box-body -->
-        </div>
+        <!-- </div> -->
         <!-- /.box -->
       </div>
       <!-- /.col -->
@@ -119,11 +129,22 @@
           </div>
           <!-- /.box-header -->
           <div class="box-body">
-            <video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="268"
-            data-setup='{}'>
-              <source src="rtmp://10.151.36.34/{{ $user->username }}/test" type='rtmp/mp4'>
-            </video>
-
+            @if($user->id == Auth::user()->id)
+            <div class="record-info">
+              <h1>Please Record to <a href="#">rtmp://10.151.36.34/{{ $user->username }}/test</a></h1>
+            </div>
+            @endif
+            <br>
+            <div class="video-box">
+              <video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="268"
+              data-setup='{}'>
+                <source src="rtmp://10.151.36.35/{{ $user->username }}/test" type='rtmp/mp4'>
+              </video>
+              <h2><iframe src="http://10.151.36.35/nclients?app={{ $user->username }}&name=test" width="150px" height="40px"></iframe> Viewers</h2>
+            </div>
+            <br>
+            <hr>
+            <br>
             <div id="chat-{{ $user->id }}" class="chatbox" user="{{ Auth::user()->username }}">
               <ul id="messages"></ul>
               <span id="notifyUser"></span>
@@ -148,4 +169,21 @@
   </section>
   <!-- /.content -->
 </div>
+@endsection
+@section('additionaljs')
+<script type="text/javascript">
+(function worker() {
+$.ajax({
+  url: 'http://10.151.36.35/stat',
+  success: function(data) {
+    // $('.result').html(data);
+    console.log(data);
+  },
+  complete: function() {
+    // Schedule the next request when the current one's complete
+    setTimeout(worker, 5000);
+  }
+});
+})();
+</script>
 @endsection

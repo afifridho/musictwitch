@@ -1,4 +1,4 @@
- var socket = io.connect("http://localhost:3000/");
+ var socket = io.connect("http://10.151.36.121:3000/");
 //var socket = io()/*.connect(("http://riset.ajk.if.its.ac.id/", 3000);*/
 function submitfunction(){
   var from = $('#user').val();
